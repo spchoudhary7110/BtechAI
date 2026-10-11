@@ -62,7 +62,7 @@ function renderBooks() {
         card.className = "book-card";
 
         card.innerHTML = `
-            <div class="book-title"></div>
+            <div class="book-title">${book.title}</div>
 
             <span class="badge ${getBadgeClass(book.status)}">
                 ${book.status}
@@ -80,16 +80,11 @@ function renderBooks() {
                 </option>
             </select>
 
-            <button class="edit-btn" data-id="${book.id}">
-                Edit
-            </button>
-
             <button class="delete-btn" data-id="${book.id}">
                 Delete
             </button>
         `;
 
-        card.querySelector(".book-title").textContent = book.title;
         bookList.appendChild(card);
     });
 
@@ -113,51 +108,15 @@ function renderBooks() {
 }
 
 bookList.addEventListener("click", event => {
-    const editButton = event.target.closest(".edit-btn");
+    const button = event.target.closest(".delete-btn");
 
-    if (editButton) {
-        const id = Number(editButton.dataset.id);
-        const book = books.find(book => book.id === id);
-
-        if (!book) return;
-
-        const title = prompt("Edit book title:", book.title);
-
-        if (title === null) return;
-
-        const updatedTitle = title.trim();
-
-        if (!updatedTitle) {
-            alert("Please enter a book title.");
-            return;
-        }
-
-        const duplicateTitle = books.some(
-            otherBook =>
-                otherBook.id !== id &&
-                otherBook.title.toLowerCase() === updatedTitle.toLowerCase()
-        );
-
-        if (duplicateTitle) {
-            alert("This book is already in your reading list.");
-            return;
-        }
-
-        book.title = updatedTitle;
-        saveBooks();
-        renderBooks();
-        return;
-    }
-
-    const deleteButton = event.target.closest(".delete-btn");
-
-    if (!deleteButton) return;
+    if (!button) return;
 
     const confirmed = confirm("Are you sure you want to delete this book?");
 
     if (!confirmed) return;
 
-    const id = Number(deleteButton.dataset.id);
+    const id = Number(button.dataset.id);
     books = books.filter(book => book.id !== id);
 
     saveBooks();
