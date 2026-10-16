@@ -57,7 +57,7 @@ function renderBooks() {
         emptyState.style.display = "none";
     }
 
-    filteredBooks.forEach((book, index) => {
+    filteredBooks.forEach(book => {
         const card = document.createElement("div");
         card.className = "book-card";
 
@@ -79,10 +79,6 @@ function renderBooks() {
                     Done
                 </option>
             </select>
-
-            <button class="edit-btn" data-id="${book.id}">
-                Edit
-            </button>
 
             <button class="delete-btn" data-id="${book.id}">
                 Delete
@@ -112,41 +108,11 @@ function renderBooks() {
 }
 
 bookList.addEventListener("click", event => {
-    const button = event.target.closest(".edit-btn, .delete-btn");
+    const button = event.target.closest(".delete-btn");
 
     if (!button) return;
 
     const id = Number(button.dataset.id);
-
-    if (button.classList.contains("edit-btn")) {
-        const book = books.find(book => book.id === id);
-        if (!book) return;
-
-        const title = prompt("Enter a new title:", book.title);
-        if (title === null) return;
-
-        const updatedTitle = title.trim();
-        if (!updatedTitle) {
-            alert("Please enter a book title.");
-            return;
-        }
-
-        const duplicateTitle = books.some(
-            otherBook =>
-                otherBook.id !== id &&
-                otherBook.title.toLowerCase() === updatedTitle.toLowerCase()
-        );
-
-        if (duplicateTitle) {
-            alert("This book is already in your reading list.");
-            return;
-        }
-
-        book.title = updatedTitle;
-        saveBooks();
-        renderBooks();
-        return;
-    }
 
     const confirmed = confirm("Are you sure you want to delete this book?");
 
